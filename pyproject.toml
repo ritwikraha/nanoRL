@@ -1,0 +1,21 @@
+[project]
+name = "nanorl"
+version = "0.1.0"
+description = "Lightweight RL and preference optimization algorithms."
+authors = [{name = "Ritwik Raha"}, {name = "Aritra Roy Gosthipaty"}]
+dependencies = [
+    "torch",
+    "transformers",
+    "datasets",
+    "accelerate",
+    "tqdm",
+    "numpy"
+]
+requires-python = ">=3.8"
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["nanorl"]
