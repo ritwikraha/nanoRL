@@ -30,13 +30,12 @@ def train_dpo(config: TrainingConfig):
     for param in reference_model.parameters():
         param.requires_grad = False
 
-    print("Generating dummy preference data...")
     train_data = load_dataset("ritwikraha/reasoning", split="train[:80%]")
     val_data = load_dataset("ritwikraha/reasoning", split="train[80%:]")
 
     train_dataset = DPODataset(train_data)
     val_dataset = DPODataset(val_data)
-    collate = partial(dpo_collate_fn(tokenizer, config.max_length))
+    collate = partial(dpo_collate_fn, tokenizer=tokenizer, max_length=config.max_length)
 
     train_loader = DataLoader(
         train_dataset, batch_size=config.batch_size, shuffle=True, collate_fn=collate
