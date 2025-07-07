@@ -4,7 +4,7 @@ from nanorl.algorithms.dpo.loss import compute_dpo_loss
 from nanorl.algorithms.dpo.model import get_model_logprobs
 
 
-def evaluate(policy_model, reference_model, dataloader, config):
+def evaluate(policy_model, reference_model, dataloader, config, pad_token_id):
     policy_model.eval()
     total_loss = 0
     total_accuracy = 0
@@ -19,24 +19,29 @@ def evaluate(policy_model, reference_model, dataloader, config):
                 batch["chosen_input_ids"],
                 batch["chosen_attention_mask"],
                 batch["chosen_labels"],
+                pad_token_id
+
             )
             policy_rejected_logps = get_model_logprobs(
                 policy_model,
                 batch["rejected_input_ids"],
                 batch["rejected_attention_mask"],
                 batch["rejected_labels"],
+                pad_token_id
             )
             reference_chosen_logps = get_model_logprobs(
                 reference_model,
                 batch["chosen_input_ids"],
                 batch["chosen_attention_mask"],
                 batch["chosen_labels"],
+                pad_token_id
             )
             reference_rejected_logps = get_model_logprobs(
                 reference_model,
                 batch["rejected_input_ids"],
                 batch["rejected_attention_mask"],
                 batch["rejected_labels"],
+                pad_token_id
             )
 
             loss, accuracy = compute_dpo_loss(

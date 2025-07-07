@@ -131,7 +131,7 @@ def train_dpo(config: TrainingConfig):
                     )
 
         print("Running validation...")
-        val_loss, val_acc = evaluate(policy_model, reference_model, val_loader, config)
+        val_loss, val_acc = evaluate(policy_model, reference_model, val_loader, config, tokenizer.pad_token_id)
         print(f"Validation - Loss: {val_loss:.4f}, Accuracy: {val_acc:.4f}")
 
         print("Generating sample outputs...")
