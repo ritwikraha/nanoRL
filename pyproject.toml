@@ -1,21 +1,22 @@
 [project]
 name = "nanorl"
 version = "0.1.0"
-description = "Lightweight RL and preference optimization algorithms."
-authors = [{name = "Ritwik Raha"}, {name = "Aritra Roy Gosthipaty"}]
-dependencies = [
-    "torch",
-    "transformers",
-    "datasets",
-    "accelerate",
-    "tqdm",
-    "numpy"
+description = "Rewards and actors for smol models"
+readme = "README.md"
+authors = [
+    { name = "ritwikraha", email = "ritwik.nsec@gmail.com" },
+    { name = "ariG23498", email = "aritra.born2fly@gmail.com" }
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
+dependencies = [
+    "datasets>=3.6.0",
+    "isort>=6.0.1",
+    "pre-commit>=4.2.0",
+    "ruff>=0.12.2",
+    "torch>=2.7.1",
+    "transformers>=4.53.1",
+]
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["nanorl"]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
