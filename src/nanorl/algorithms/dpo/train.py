@@ -30,18 +30,18 @@ def train_dpo(config: TrainingConfig):
     for param in reference_model.parameters():
         param.requires_grad = False
 
-    train_data = load_dataset("ritwikraha/reasoning", split="train[:80%]")
-    val_data = load_dataset("ritwikraha/reasoning", split="train[80%:]")
+    train_data = load_dataset("ritwikraha/reasoning", split="train[:90%]")
+    val_data = load_dataset("ritwikraha/reasoning", split="train[90%:]")
 
     train_dataset = DPODataset(train_data)
     val_dataset = DPODataset(val_data)
-    collate = partial(dpo_collate_fn, tokenizer=tokenizer, max_length=config.max_length)
+    collate_fn = partial(dpo_collate_fn, tokenizer=tokenizer, max_length=config.max_length)
 
     train_loader = DataLoader(
-        train_dataset, batch_size=config.batch_size, shuffle=True, collate_fn=collate
+        train_dataset, batch_size=config.batch_size, shuffle=True, collate_fn=collate_fn
     )
     val_loader = DataLoader(
-        val_dataset, batch_size=config.batch_size, shuffle=False, collate_fn=collate
+        val_dataset, batch_size=config.batch_size, shuffle=False, collate_fn=collate_fn
     )
 
     optimizer = torch.optim.AdamW(
@@ -131,7 +131,9 @@ def train_dpo(config: TrainingConfig):
                     )
 
         print("Running validation...")
-        val_loss, val_acc = evaluate(policy_model, reference_model, val_loader, config, tokenizer.pad_token_id)
+        val_loss, val_acc = evaluate(
+            policy_model, reference_model, val_loader, config, tokenizer.pad_token_id
+        )
         print(f"Validation - Loss: {val_loss:.4f}, Accuracy: {val_acc:.4f}")
 
         print("Generating sample outputs...")

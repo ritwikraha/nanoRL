@@ -3,9 +3,8 @@ import torch
 
 def generate_samples(model, tokenizer, device, num_samples=3):
     prompts = [
-        "The capital of France is",
-        "To make a good cup of coffee, you should",
-        "The best way to learn programming is",
+        "What is the captial of France?",
+        "What is the easiest programming language?",
     ]
 
     model.eval()

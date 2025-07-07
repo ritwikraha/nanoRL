@@ -19,29 +19,28 @@ def evaluate(policy_model, reference_model, dataloader, config, pad_token_id):
                 batch["chosen_input_ids"],
                 batch["chosen_attention_mask"],
                 batch["chosen_labels"],
-                pad_token_id
-
+                pad_token_id,
             )
             policy_rejected_logps = get_model_logprobs(
                 policy_model,
                 batch["rejected_input_ids"],
                 batch["rejected_attention_mask"],
                 batch["rejected_labels"],
-                pad_token_id
+                pad_token_id,
             )
             reference_chosen_logps = get_model_logprobs(
                 reference_model,
                 batch["chosen_input_ids"],
                 batch["chosen_attention_mask"],
                 batch["chosen_labels"],
-                pad_token_id
+                pad_token_id,
             )
             reference_rejected_logps = get_model_logprobs(
                 reference_model,
                 batch["rejected_input_ids"],
                 batch["rejected_attention_mask"],
                 batch["rejected_labels"],
-                pad_token_id
+                pad_token_id,
             )
 
             loss, accuracy = compute_dpo_loss(
