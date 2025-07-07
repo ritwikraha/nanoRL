@@ -1,8 +1,11 @@
+from functools import partial
+
 import torch
 from datasets import load_dataset
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from transformers import GPT2LMHeadModel, GPT2Tokenizer, get_linear_schedule_with_warmup
+from transformers import (GPT2LMHeadModel, GPT2Tokenizer,
+                          get_linear_schedule_with_warmup)
 
 from nanorl.algorithms.dpo.config import TrainingConfig
 from nanorl.algorithms.dpo.data import DPODataset, dpo_collate_fn
@@ -33,7 +36,7 @@ def train_dpo(config: TrainingConfig):
 
     train_dataset = DPODataset(train_data)
     val_dataset = DPODataset(val_data)
-    collate = lambda b: dpo_collate_fn(b, tokenizer, config.max_length)
+    collate = partial(dpo_collate_fn(tokenizer, config.max_length))
 
     train_loader = DataLoader(
         train_dataset, batch_size=config.batch_size, shuffle=True, collate_fn=collate
