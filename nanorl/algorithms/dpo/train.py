@@ -1,4 +1,5 @@
 import torch
+from datasets import load_dataset
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, get_linear_schedule_with_warmup
@@ -9,7 +10,6 @@ from nanorl.algorithms.dpo.evaluate import evaluate
 from nanorl.algorithms.dpo.generate import generate_samples
 from nanorl.algorithms.dpo.loss import compute_dpo_loss
 from nanorl.algorithms.dpo.model import get_model_logprobs
-from nanorl.data.dummy_preference import generate_dummy_preference_data
 from nanorl.utils.seed import set_seed
 
 
@@ -28,8 +28,8 @@ def train_dpo(config: TrainingConfig):
         param.requires_grad = False
 
     print("Generating dummy preference data...")
-    train_data = generate_dummy_preference_data(1000)
-    val_data = generate_dummy_preference_data(100)
+    train_data = load_dataset("ritwikraha/reasoning", split="train[:80%]")
+    val_data = load_dataset("ritwikraha/reasoning", split="train[80%:]")
 
     train_dataset = DPODataset(train_data)
     val_dataset = DPODataset(val_data)
@@ -71,12 +71,14 @@ def train_dpo(config: TrainingConfig):
                 batch["chosen_input_ids"],
                 batch["chosen_attention_mask"],
                 batch["chosen_labels"],
+                tokenizer.pad_token_id,
             )
             policy_rejected_logps = get_model_logprobs(
                 policy_model,
                 batch["rejected_input_ids"],
                 batch["rejected_attention_mask"],
                 batch["rejected_labels"],
+                tokenizer.pad_token_id,
             )
 
             with torch.no_grad():
@@ -85,12 +87,14 @@ def train_dpo(config: TrainingConfig):
                     batch["chosen_input_ids"],
                     batch["chosen_attention_mask"],
                     batch["chosen_labels"],
+                    tokenizer.pad_token_id,
                 )
                 reference_rejected_logps = get_model_logprobs(
                     reference_model,
                     batch["rejected_input_ids"],
                     batch["rejected_attention_mask"],
                     batch["rejected_labels"],
+                    tokenizer.pad_token_id,
                 )
 
             loss, accuracy = compute_dpo_loss(

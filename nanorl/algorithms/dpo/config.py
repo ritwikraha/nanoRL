@@ -6,6 +6,7 @@ import torch
 @dataclass
 class TrainingConfig:
     model_name: str = "gpt2"
+    dataset_name: str = "ritwikraha/reasoning"
     learning_rate: float = 5e-5
     beta: float = 0.1
     batch_size: int = 4

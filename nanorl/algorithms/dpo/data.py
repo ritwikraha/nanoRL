@@ -17,7 +17,16 @@ class DPODataset(Dataset):
 def dpo_collate_fn(batch: List[Dict], tokenizer, max_length: int = 128):
     prompts = [item["prompt"] for item in batch]
     chosen_responses = [item["chosen"] for item in batch]
+    chosen_responses = [
+        f"Answer: {item['answer']}\n\n Reason: {item['reasoning']}"
+        for item in chosen_responses
+    ]
+
     rejected_responses = [item["rejected"] for item in batch]
+    rejected_responses = [
+        f"Answer: {item['answer']}\n\n Reason: {item['reasoning']}"
+        for item in rejected_responses
+    ]
 
     chosen_texts = [p + c for p, c in zip(prompts, chosen_responses)]
     rejected_texts = [p + r for p, r in zip(prompts, rejected_responses)]
